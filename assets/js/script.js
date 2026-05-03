@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getDatabase, ref, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -10,7 +10,6 @@ const firebaseConfig = {
   storageBucket: "mafiasync-ec7d0.firebasestorage.app",
   messagingSenderId: "788300403687",
   appId: "1:788300403687:web:46b80429810ac58001a342",
-  measurementId: "G-9Y2DE95TNH",
   databaseURL: "https://mafiasync-ec7d0-default-rtdb.firebaseio.com"
 };
 
@@ -19,96 +18,77 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const rtdb = getDatabase(app);
 
-const subjects = ["සිංහල", "විද්‍යාව", "ගණිතය", "ඉතිහාසය", "සංගීතය", "ඉංග්‍රීසි", "I.C.T", "Commerce", "බුද්ධ ධර්මය"];
+const subjects = ["සිංහල", "විද්‍යාව", "ගණිතය", "ඉතිහාසය", "සිංහල LIT", "ඉංග්‍රීසි", "I.C.T", "Commerce", "බුද්ධ ධර්මය"];
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-let studySeconds = 0;
-let timerInterval;
 
-// --- AUTH & RADAR SYNC ---
+// --- LOGIN WITH REMEMBER ME ---
+window.login = async () => {
+    const uVal = document.getElementById('user').value.trim();
+    const pass = document.getElementById('pass').value.trim();
+    const remember = document.getElementById('rememberMe').checked;
+    const email = `${uVal.toLowerCase()}@mafia.com`;
+
+    try {
+        // Set persistence based on checkbox[cite: 1]
+        await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+        await signInWithEmailAndPassword(auth, email, pass);
+        toggleModal('loginModal');
+    } catch (e) { alert("ACCESS DENIED"); }
+};
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        const username = user.email.split('@')[0].toUpperCase();
-        document.getElementById('loginBtn').innerText = username;
+        const name = user.email.split('@')[0].toUpperCase();
+        document.getElementById('loginBtn').innerText = name;
+        
+        // Theme Logic[cite: 1]
+        if (name === "MAFIAKING") document.body.className = "theme-red";
+        else if (name === "MAFIADEVIL") document.body.className = "theme-blue";
 
-        const statusRef = ref(rtdb, 'status/' + username);
-        set(statusRef, { state: 'online', last_changed: Date.now() });
-        onDisconnect(statusRef).remove();
-
-        if (username === "MAFIAKING") unlockAdmin();
+        // Status Update
+        set(ref(rtdb, 'status/' + name), { state: 'online' });
+        onDisconnect(ref(rtdb, 'status/' + name)).remove();
         setupLiveRadar();
     }
 });
 
-function setupLiveRadar() {
-    const statusRef = ref(rtdb, 'status');
-    onValue(statusRef, (snapshot) => {
-        const data = snapshot.val();
-        const list = document.getElementById('playerList');
-        if (!list || !data) return;
-        list.innerHTML = "";
-        Object.keys(data).forEach(u => {
-            const color = data[u].state === 'STUDYING' ? '#ff3131' : '#00ff41';
-            list.innerHTML += `<div style="color:${color}; padding:10px; border-bottom:1px solid #222;">● ${u} [${data[u].state}]</div>`;
-        });
-    });
-}
-
-// --- TRACKER LOGIC ---
-window.startStudy = () => {
-    if (!auth.currentUser) return alert("LOGIN REQUIRED");
-    const u = auth.currentUser.email.split('@')[0].toUpperCase();
-    set(ref(rtdb, 'status/' + u), { state: 'STUDYING', last_changed: Date.now() });
-    timerInterval = setInterval(() => { studySeconds++; updateDisplay(); }, 1000);
+// --- POP-UP SYSTEM ---
+window.showDayDetail = (dayIndex) => {
+    const title = document.getElementById('detailTitle');
+    const body = document.getElementById('detailBody');
+    
+    // Resize/Update logic: if already open, it just changes content[cite: 1]
+    title.innerText = `SCHEDULE: ${days[dayIndex]}`;
+    body.innerHTML = `
+        <p>19:00 - 21:00: ${subjects[dayIndex % 9]}</p>
+        <p>21:15 - 00:00: ${subjects[(dayIndex + 1) % 9]}</p>
+        <hr>
+        <button onclick="showCalendar('${days[dayIndex]}')">VIEW_CALENDAR_HISTORY</button>
+    `;
+    document.getElementById('detailsModal').style.display = 'flex';
 };
 
-window.stopStudy = async () => {
-    clearInterval(timerInterval);
-    if (!auth.currentUser) return;
-    const u = auth.currentUser.email.split('@')[0].toUpperCase();
-    set(ref(rtdb, 'status/' + u), { state: 'online', last_changed: Date.now() });
-    await setDoc(doc(db, "study_logs", u), { totalSeconds: studySeconds, date: new Date().toLocaleDateString() }, { merge: true });
-    studySeconds = 0;
-    updateDisplay();
+window.showCalendar = (day) => {
+    const body = document.getElementById('detailBody');
+    body.innerHTML = `<h3>LOGS FOR ${day}</h3><p>Checking database for study history...</p>`;
+    // This "resizes" the existing popup instead of opening a new one[cite: 1]
 };
 
-function updateDisplay() {
-    const h = Math.floor(studySeconds / 3600).toString().padStart(2, '0');
-    const m = Math.floor((studySeconds % 3600) / 60).toString().padStart(2, '0');
-    const s = (studySeconds % 60).toString().padStart(2, '0');
-    document.getElementById('timerDisplay').innerText = `SESSION: ${h}:${m}:${s}`;
-}
-
-// --- UTILITIES ---
-window.login = async () => {
-    const uVal = document.getElementById('user').value.trim();
-    const pass = document.getElementById('pass').value.trim();
-    const email = uVal.includes('@') ? uVal : `${uVal.toLowerCase()}@mafia.com`;
-    try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        window.toggleModal('loginModal');
-    } catch (e) { alert("ERROR: " + e.message); }
-};
+// --- GRID GENERATION ---
+const grid = document.getElementById('grid');
+days.forEach((day, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<strong>${day}</strong><br>${subjects[i % 9]}`;
+    card.onclick = () => showDayDetail(i);
+    grid.appendChild(card);
+});
 
 window.toggleModal = (id) => {
     const m = document.getElementById(id);
     m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
 };
 
-function unlockAdmin() {
-    if (document.getElementById('adminBtn')) return;
-    const btn = document.createElement('button');
-    btn.id = 'adminBtn'; btn.innerText = "CORE_CONTROL"; btn.style.color = "gold";
-    btn.onclick = () => alert("LVL 999: GitHub Source Access Granted.");
-    document.getElementById('topHeader').appendChild(btn);
-}
-
-// Grid Generation
-const grid = document.getElementById('grid');
-days.forEach((day, i) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `<span class="day-name">${day}</span><p>${subjects[i % 9]}</p>`;
-    grid.appendChild(card);
-});
-
-setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+setInterval(() => {
+    document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+}, 1000);
