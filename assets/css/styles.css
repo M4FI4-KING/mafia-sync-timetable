@@ -1,4 +1,4 @@
-:root { --neon: #ff0000; --bg: #000; --glow: rgba(255, 0, 0, 0.6); }
+:root { --neon: #ff0000; --bg: #000; }
 
 body {
     background: var(--bg);
@@ -8,10 +8,9 @@ body {
     flex-direction: column;
     align-items: center;
     margin: 0;
-    overflow-x: hidden;
 }
 
-/* HORIZONTAL GRID */
+/* HORIZONTAL GRID FOR SUBJECTS[cite: 1] */
 #grid {
     display: flex;
     flex-direction: row;
@@ -24,18 +23,20 @@ body {
 
 .card {
     border: 1px solid var(--neon);
-    padding: 20px;
-    width: 130px;
+    padding: 15px;
+    width: 140px;
+    min-height: 80px;
     text-align: center;
     background: rgba(20, 0, 0, 0.4);
     cursor: pointer;
-    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .card:hover {
     background: var(--neon);
     color: #000;
-    box-shadow: 0 0 15px var(--neon);
 }
 
 .modal-overlay {
@@ -52,23 +53,10 @@ body {
     background: #000;
     border: 2px solid var(--neon);
     padding: 25px;
-    width: 320px;
-    box-shadow: 0 0 30px var(--glow);
+    width: 300px;
 }
 
-.glitch {
-    font-size: 3rem;
-    animation: glitch 1s infinite;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-@keyframes glitch {
-    0% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
-    50% { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; }
-    100% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
-}
-
+.glitch { font-size: 3rem; text-align: center; text-transform: uppercase; }
 .action-btn { background: var(--neon); color: #000; border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; }
 .cyber-btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 5px 15px; cursor: pointer; }
-input { width: 100%; background: #111; border: 1px solid var(--neon); color: var(--neon); padding: 10px; margin: 10px 0; }
+input { width: 100%; background: #111; border: 1px solid var(--neon); color: var(--neon); padding: 10px; margin: 10px 0; box-sizing: border-box; }
