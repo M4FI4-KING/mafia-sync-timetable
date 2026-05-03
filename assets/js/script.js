@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDkWghikz4GXXeBtwlh0xyBdmii7Ks-suI",
@@ -8,8 +8,7 @@ const firebaseConfig = {
   projectId: "mafiasync-ec7d0",
   storageBucket: "mafiasync-ec7d0.firebasestorage.app",
   messagingSenderId: "788300403687",
-  appId: "1:788300403687:web:46b80429810ac58001a342",
-  databaseURL: "https://mafiasync-ec7d0-default-rtdb.firebaseio.com"
+  appId: "1:788300403687:web:46b80429810ac58001a342"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -19,71 +18,48 @@ const db = getFirestore(app);
 let currentUser = null;
 let startTime, timerInterval;
 
-// --- SUBJECT GRID GENERATOR ---
-const schedule = [
-    { day: "MON", s1: "19:00: සිංහල", s2: "21:15: විද්‍යාව" },
-    { day: "TUE", s1: "19:00: විද්‍යාව", s2: "21:15: ගණිතය" },
-    { day: "WED", s1: "19:00: ගණිතය", s2: "21:15: ඉතිහාසය" },
-    { day: "THU", s1: "19:00: ඉතිහාසය", s2: "21:15: සංගීතය" },
-    { day: "FRI", s1: "19:00: සංගීතය", s2: "21:15: ඉංග්‍රීසි" },
-    { day: "SAT", s1: "19:00: ඉංග්‍රීසි", s2: "21:15: I.C.T" },
-    { day: "SUN", s1: "19:00: I.C.T", s2: "21:15: Commerce" }
-];
-
-const grid = document.getElementById('grid');
-schedule.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `<div class="day-title">${item.day}</div><div class="sub-item">${item.s1}</div><div class="sub-item">${item.s2}</div>`;
-    grid.appendChild(card);
-});
-
-// --- UI CONTROLS ---
+// UI Toggle
 window.toggleModal = (id) => {
     const m = document.getElementById(id);
     m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
 };
 
-setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
-
-// --- AUTH & SECURITY ENGINE ---
+// Login Logic
 window.login = async () => {
-    const u = document.getElementById('user').value;
-    const p = document.getElementById('pass').value;
+    const e = document.getElementById('userEmail').value;
+    const p = document.getElementById('userPass').value;
     try {
-        await signInWithEmailAndPassword(auth, u, p);
+        await signInWithEmailAndPassword(auth, e, p);
         window.toggleModal('loginModal');
-    } catch (e) { alert("ACCESS_DENIED: Invalid Credentials"); }
+    } catch (err) { alert("FAIL: Check email/pass"); }
 };
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         currentUser = user;
-        const username = user.email.split('@')[0].toUpperCase();
-        document.getElementById('loginBtn').innerText = username;
+        const name = user.email.split('@')[0].toUpperCase();
+        document.getElementById('loginBtn').innerText = name;
         
-        // 1. Set Online Status
-        await setDoc(doc(db, "network", "players", "status", username), { online: true, lastLogin: new Date().toISOString() }, { merge: true });
-
-        // 2. MAFIAKING SECURITY CHECK
-        if (user.email === "mafiaking@gmail.com") {
-            document.getElementById('adminBtn').style.display = 'block'; // Unlock Admin
-        } else {
-            document.getElementById('adminBtn').style.display = 'none'; // Lock out everyone else
+        // ADMIN CHECK: Only mafiaking@gmail.com sees the button
+        if(user.email === "mafiaking@gmail.com") {
+            document.getElementById('adminBtn').style.display = "block";
         }
 
-        // 3. Listen for forced theme changes
+        // Presence Logic
+        await setDoc(doc(db, "network", "players", "status", name), { online: true }, { merge: true });
+
+        // Listen for Theme Force
         onSnapshot(doc(db, "network", "theme_control"), (snap) => {
-            if (snap.exists() && snap.data()[username]) {
-                document.body.style.setProperty('--neon', snap.data()[username]);
+            if(snap.exists() && snap.data()[name]) {
+                document.body.style.setProperty('--neon', snap.data()[name]);
             }
         });
     }
 });
 
-// --- STUDY TRACKER & SAVING ---
+// Timer Logic
 window.startStudy = () => {
-    if(!currentUser) return alert("MUST LOGIN FIRST");
+    if(!currentUser) return alert("LOGIN REQUIRED");
     startTime = Date.now();
     timerInterval = setInterval(() => {
         const diff = Date.now() - startTime;
@@ -96,79 +72,54 @@ window.startStudy = () => {
 
 window.stopStudy = async () => {
     clearInterval(timerInterval);
-    if (!currentUser || !startTime) return;
-    
-    const diff = Date.now() - startTime;
-    const minutes = Math.floor(diff / 60000);
-    
-    // Save to Database
-    try {
-        await addDoc(collection(db, "study_logs"), {
-            user: currentUser.email.split('@')[0].toUpperCase(),
-            duration_minutes: minutes,
-            date: new Date().toLocaleDateString(),
-            timestamp: serverTimestamp()
-        });
-        alert(`SESSION_SAVED: ${minutes} Minutes Logged.`);
-    } catch (e) {
-        console.error(e);
-        alert("ERROR_SAVING_DATA");
-    }
-    
+    if(!startTime) return;
+    const mins = Math.floor((Date.now() - startTime) / 60000);
+    await addDoc(collection(db, "study_logs"), {
+        user: currentUser.email.split('@')[0].toUpperCase(),
+        minutes: mins,
+        timestamp: serverTimestamp()
+    });
+    alert(`SAVED: ${mins} Mins`);
     document.getElementById('timerDisplay').innerText = "SESSION: 00:00:00";
     startTime = null;
 };
 
-// --- RADAR & LOG READERS ---
-window.loadMyLogs = async () => {
-    if(!currentUser) return;
-    const username = currentUser.email.split('@')[0].toUpperCase();
-    const list = document.getElementById('myLogsList');
-    list.innerHTML = "Fetching archives...";
-    
-    const q = query(collection(db, "study_logs"), where("user", "==", username));
-    const snap = await getDocs(q);
-    list.innerHTML = "";
-    if(snap.empty) list.innerHTML = "No records found.";
-    snap.forEach(doc => {
-        const data = doc.data();
-        list.innerHTML += `<div class="log-entry">${data.date} - ${data.duration_minutes} Mins</div>`;
-    });
-};
-
+// Loaders
 window.loadPlayers = async () => {
     const list = document.getElementById('playersList');
-    list.innerHTML = "Scanning network...";
+    list.innerHTML = "Scanning...";
     const snap = await getDocs(collection(db, "network/players/status"));
     list.innerHTML = "";
-    snap.forEach(doc => {
-        const data = doc.data();
-        const statusStr = data.online ? "<span style='color:#0f0'>[ONLINE]</span>" : "<span style='color:#f00'>[OFFLINE]</span>";
-        list.innerHTML += `<div class="log-entry">${doc.id}: ${statusStr}</div>`;
-    });
+    snap.forEach(d => list.innerHTML += `<div>${d.id} - <span style="color:#0f0">ONLINE</span></div>`);
 };
 
-// --- ADMIN CONTROL FUNCTIONS ---
 window.loadAdminData = async () => {
     const list = document.getElementById('allLogsList');
-    list.innerHTML = "Fetching global logs...";
-    const snap = await getDocs(collection(db, "study_logs")); // Gets EVERYONE'S logs
+    list.innerHTML = "Fetching global data...";
+    const snap = await getDocs(collection(db, "study_logs"));
     list.innerHTML = "";
-    snap.forEach(doc => {
-        const data = doc.data();
-        list.innerHTML += `<div class="log-entry">[${data.user}] ${data.date} - ${data.duration_minutes} Mins</div>`;
-    });
+    snap.forEach(d => list.innerHTML += `<div>[${d.data().user}] ${d.data().minutes} Mins</div>`);
 };
 
 window.overrideTheme = async () => {
-    const targetUser = document.getElementById('targetPlayer').value.toUpperCase();
-    const newColor = document.getElementById('targetColor').value;
-    if(!targetUser) return alert("ENTER_TARGET_USERNAME");
-    
-    try {
-        await setDoc(doc(db, "network", "theme_control"), {
-            [targetUser]: newColor
-        }, { merge: true });
-        alert(`THEME_FORCED_ON: ${targetUser}`);
-    } catch (e) { alert("OVERRIDE_FAILED"); }
+    const target = document.getElementById('targetPlayer').value.toUpperCase();
+    const color = document.getElementById('targetColor').value;
+    await setDoc(doc(db, "network", "theme_control"), { [target]: color }, { merge: true });
+    alert("DEPLOYED");
 };
+
+setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB'); }, 1000);
+
+// Add Grid
+const schedule = [
+    { day: "MON", s1: "19:00: සිංහල", s2: "21:15: විද්‍යාව" },
+    { day: "TUE", s1: "19:00: විද්‍යාව", s2: "21:15: ගණිතය" },
+    { day: "WED", s1: "19:00: ගණිතය", s2: "21:15: ඉතිහාසය" },
+    { day: "THU", s1: "19:00: ඉතිහාසය", s2: "21:15: සංගීතය" },
+    { day: "FRI", s1: "19:00: සංගීතය", s2: "21:15: ඉංග්‍රීසි" },
+    { day: "SAT", s1: "19:00: ඉංග්‍රීසි", s2: "21:15: I.C.T" },
+    { day: "SUN", s1: "19:00: I.C.T", s2: "21:15: Commerce" }
+];
+schedule.forEach(i => {
+    grid.innerHTML += `<div class="card"><div class="day-title">${i.day}</div><div class="sub-item">${i.s1}</div><div class="sub-item">${i.s2}</div></div>`;
+});
