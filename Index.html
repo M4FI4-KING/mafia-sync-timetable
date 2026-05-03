@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAFIA SYNC | TIMETABLE V1</title>
+    <link rel="stylesheet" href="/STUDY TABLE/assets/css/styles.css">
+</head>
+<body id="mainBody">
+
+    <header id="topHeader">
+        <button class="btn" onclick="toggleModal('playerModal')">Players</button>
+        <button class="btn" id="loginBtn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
+    </header>
+
+    <div class="container">
+        <h1 class="glitch-title">TIME_TABLE_V1</h1>
+        <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="hud">
+        <div id="clock">00:00:00</div>
+        <div id="timerDisplay">SESSION: 00:00:00</div>
+        <div style="margin-top: 10px;">
+            <button class="btn btn-start" onclick="startStudy()">START_LEARNING</button>
+            <button class="btn btn-stop" onclick="stopStudy()">STOP_LEARNING</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2 style="color: var(--neon)">AUTHENTICATE</h2>
+            <input type="text" id="user" placeholder="Username">
+            <input type="password" id="pass" placeholder="Password">
+            <br>
+            <button class="btn" onclick="login()">LOGIN</button>
+            <button class="btn" onclick="toggleModal('loginModal')" style="border:none">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Day Info Modal -->
+    <div class="modal" id="dayModal">
+        <div class="modal-content">
+            <h2 id="dayTitle" style="color: var(--neon)">DAY_INFO</h2>
+            <div id="dayInfo"></div>
+            <br>
+            <button class="btn" onclick="toggleModal('dayModal')">BACK</button>
+        </div>
+    </div>
+
+  <!-- Load Firebase as a Module -->
+<script type="module" src="/STUDY TABLE/assets/js/script.js"></script>
+</body>
+</html>
