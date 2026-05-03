@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAFIA_SYNC_V1</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
     <div class="scanline"></div>
-    <div class="container fade-in">
+    <div class="container">
         <div id="topHeader" class="header">
             <button class="cyber-btn" onclick="toggleModal('playersModal')">PLAYERS_RADAR</button>
             <button id="loginBtn" class="cyber-btn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
         </div>
 
-        <h1 class="glitch" data-text="TIME_TABLE_V1">TIME_TABLE_V1</h1>
+        <h1 class="glitch">TIME_TABLE_V1</h1>
         
         <div id="timer-section">
-            <h2 id="clock" class="neon-glow">00:00:00</h2>
+            <h2 id="clock">00:00:00</h2>
             <h3 id="timerDisplay">SESSION: 00:00:00</h3>
         </div>
 
         <div class="controls">
+            <!-- These now point to global functions -->
             <button id="startBtn" class="action-btn" onclick="startStudy()">START_LEARNING</button>
             <button id="stopBtn" class="action-btn" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
@@ -29,7 +30,7 @@
         <div id="grid"></div>
     </div>
 
-    <!-- SIMPLE LOGIN MODAL -->
+    <!-- LOGIN MODAL -->
     <div id="loginModal" class="modal-overlay">
         <div class="popup-box">
             <div id="popupHeader"><span>AUTHENTICATE</span></div>
@@ -40,6 +41,6 @@
         </div>
     </div>
 
-    <script type="module" src="assets/js/script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
