@@ -4,23 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAFIA_SYNC_V1</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
+    <div class="header" id="topHeader">
         <div class="left-controls">
             <button class="cyber-btn" onclick="toggleModal('playersModal'); loadPlayers();">PLAYERS</button>
             <button class="cyber-btn" onclick="toggleModal('logsModal'); loadMyLogs();" style="margin-left: 10px;">MY_LOGS</button>
         </div>
-        
         <div class="user-display" id="loginBtn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</div>
-        
-        <!-- Hidden by default, only mafiaking@gmail.com unlocks this -->
-        <button class="cyber-btn" id="adminBtn" onclick="toggleModal('adminPanel'); loadAdminData();" style="display:none; color: gold; border-color: gold;">CORE_CONTROL</button>
+        <!-- This button stays hidden until you log in as mafiaking@gmail.com -->
+        <button class="cyber-btn" id="adminBtn" onclick="toggleModal('adminPanel'); loadAdminData();" style="display:none; color: gold; border-color: gold; margin-left: 10px;">ADMIN_POWERS</button>
     </div>
 
     <h1 class="glitch">T I M E _ T A B L E _ V 1</h1>
-    
     <div id="grid"></div>
 
     <div class="timer-box">
@@ -28,63 +25,55 @@
         <p id="timerDisplay">SESSION: 00:00:00</p>
         <div class="controls">
             <button class="action-btn start" onclick="startStudy()">START_LEARNING</button>
-            <button class="action-btn stop" onclick="stopStudy()">STOP_LEARNING (SAVE)</button>
+            <button class="action-btn stop" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
     </div>
 
-    <div class="network-stats">
-        <div>↑ 3.4 KBps</div>
-        <div>↓ 1.0 KBps</div>
-    </div>
-
-    <!-- LOGIN MODAL -->
+    <!-- MODAL OVERLAYS (HIDDEN BY CSS) -->
     <div id="loginModal" class="modal-overlay">
         <div class="popup-box">
             <p>AUTHENTICATE</p>
-            <input type="text" id="user" placeholder="Email (e.g. mafiaking@gmail.com)">
-            <input type="password" id="pass" placeholder="Password">
+            <input type="text" id="userEmail" placeholder="Email (mafiaking@gmail.com)">
+            <input type="password" id="userPass" placeholder="Password">
             <button class="action-btn" onclick="login()" style="width:100%">LOGIN</button>
             <button class="cyber-btn" onclick="toggleModal('loginModal')" style="width:100%; margin-top:10px;">CANCEL</button>
         </div>
     </div>
 
-    <!-- PLAYERS RADAR MODAL -->
     <div id="playersModal" class="modal-overlay">
         <div class="popup-box wide">
             <p style="color: #00ff00;">NETWORK_RADAR</p>
             <div id="playersList" class="data-list">Loading...</div>
-            <button class="cyber-btn" onclick="toggleModal('playersModal')" style="width:100%; margin-top:10px;">CLOSE</button>
+            <button class="cyber-btn" onclick="toggleModal('playersModal')">CLOSE</button>
         </div>
     </div>
 
-    <!-- MY LOGS MODAL -->
     <div id="logsModal" class="modal-overlay">
         <div class="popup-box wide">
             <p style="color: #00ffff;">STUDY_ARCHIVE</p>
             <div id="myLogsList" class="data-list">Loading...</div>
-            <button class="cyber-btn" onclick="toggleModal('logsModal')" style="width:100%; margin-top:10px;">CLOSE</button>
+            <button class="cyber-btn" onclick="toggleModal('logsModal')">CLOSE</button>
         </div>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="adminPanel" class="modal-overlay">
         <div class="popup-box wide" style="border-color: gold;">
             <p style="color: gold;">MAFIAKING_CORE_ACCESS</p>
-            
             <label>OVERRIDE PLAYER THEME:</label>
-            <div style="display:flex; gap:10px; margin-bottom: 15px;">
-                <input type="text" id="targetPlayer" placeholder="Player Username..." style="flex: 2;">
-                <input type="color" id="targetColor" style="flex: 1; height: 40px;">
+            <div style="display:flex; gap:10px; margin: 10px 0;">
+                <input type="text" id="targetPlayer" placeholder="Player Name...">
+                <input type="color" id="targetColor" style="width:60px; height:40px;">
                 <button class="action-btn" onclick="overrideTheme()">DEPLOY</button>
             </div>
-
             <label>GLOBAL STUDY LOGS:</label>
-            <div id="allLogsList" class="data-list" style="height: 150px;">Loading...</div>
-
-            <button class="cyber-btn" onclick="toggleModal('adminPanel')" style="width:100%; margin-top:15px; color: gold; border-color: gold;">EXIT_CORE</button>
+            <div id="allLogsList" class="data-list">Loading...</div>
+            <button class="cyber-btn" onclick="toggleModal('adminPanel')" style="color:gold; border-color:gold; width:100%;">CLOSE_CORE</button>
         </div>
     </div>
 
-    <script type="module" src="assets/js/script.js"></script>
+
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
