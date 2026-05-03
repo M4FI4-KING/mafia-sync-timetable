@@ -18,15 +18,16 @@ const db = getFirestore(app);
 
 // --- MODAL CONTROLS ---
 window.toggleModal = (id) => {
-    const m = document.getElementById(id);
-    m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
 };
 
 window.closePopupExternal = (e) => {
     if (e.target.className === 'modal-overlay') e.target.style.display = 'none';
 };
 
-// --- DYNAMIC RESIZE POPUP ---
+// --- DYNAMIC RESIZE POPUP[cite: 1] ---
 window.openPopup = (type, data) => {
     const win = document.getElementById('popupWindow');
     const content = document.getElementById('popupContent');
@@ -35,20 +36,21 @@ window.openPopup = (type, data) => {
     if (type === 'day') {
         win.style.width = "400px";
         title.innerText = `SESSION: ${data}`;
-        content.innerHTML = `<p>TARGET: STUDYING_NOW</p><button class="action-btn" onclick="openPopup('calendar', '${data}')">VIEW_CALENDAR</button>`;
+        content.innerHTML = `<p>STATUS: ACTIVE</p><button class="action-btn" onclick="openPopup('calendar', '${data}')">VIEW_CALENDAR</button>`;
     } else {
-        win.style.width = "750px"; // RESIZES LIVE
-        title.innerText = "PLAYER_CALENDAR_HISTORY";
-        content.innerHTML = `<p>History data for ${data} is syncing...</p>`;
+        win.style.width = "750px"; // DYNAMIC RESIZE[cite: 1]
+        title.innerText = "PLAYER_LOGS";
+        content.innerHTML = `<p>Syncing history for ${data}...</p>`;
     }
     document.getElementById('mainPopup').style.display = 'flex';
 };
 
-// --- ADMIN LEVEL 999 ---
+// --- ADMIN 999 SYNC[cite: 1] ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const username = user.email.split('@')[0].toUpperCase();
         document.getElementById('loginBtn').innerText = username;
+        
         if (username === "MAFIAKING") unlockAdminPowers();
         
         onSnapshot(doc(db, "network", "theme_control"), (snap) => {
@@ -64,7 +66,6 @@ function unlockAdminPowers() {
     const btn = document.createElement('button');
     btn.id = "adminBtn";
     btn.className = "cyber-btn";
-    btn.style.color = "gold";
     btn.innerText = "CORE_999";
     btn.onclick = () => toggleModal('adminModal');
     document.getElementById('topHeader').appendChild(btn);
@@ -74,12 +75,13 @@ window.pushGlobalTheme = async () => {
     const target = document.getElementById('targetPlayer').value;
     const color = document.getElementById('colorPicker').value;
     await setDoc(doc(db, "network", "theme_control"), { [target]: color }, { merge: true });
-    alert("NETWORK THEME REWRITTEN");
+    alert("NETWORK REWRITTEN");
 };
 
-// Init Grid
+// --- GRID INIT ---
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 const grid = document.getElementById('grid');
+grid.innerHTML = ""; // Clear old grid
 days.forEach(d => {
     const card = document.createElement('div');
     card.className = 'card';
