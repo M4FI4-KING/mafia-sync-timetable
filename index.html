@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAFIA_SYNC_V1</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
     <div class="scanline"></div>
@@ -26,10 +26,13 @@
             <button id="stopBtn" class="action-btn" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
 
-        <div id="grid"></div>
+        <!-- THIS GRID IS NOW REINFORCED -->
+        <div id="grid-container">
+            <div id="grid"></div>
+        </div>
     </div>
 
-    <!-- The Resizing Dynamic Pop-up (Unified Window) -->
+    <!-- DYNAMIC POPUP (Fixed Closing) -->
     <div id="mainPopup" class="modal-overlay" onclick="closePopupExternal(event)">
         <div id="popupWindow" class="popup-box">
             <div id="popupHeader">
@@ -40,7 +43,7 @@
         </div>
     </div>
 
-    <!-- Admin Level 999 Menu -->
+    <!-- ADMIN 999 CORE -->
     <div id="adminModal" class="modal-overlay" onclick="closePopupExternal(event)">
         <div class="popup-box admin-box">
             <div id="popupHeader">
@@ -53,42 +56,12 @@
                     <option value="MAFIADEVIL">MAFIADEVIL</option>
                     <option value="MAFIAKING">MAFIAKING</option>
                 </select>
-                <br><br>
-                <label>NETWORK_OVERRIDE_COLOR:</label>
-                <input type="color" id="colorPicker" value="#00ff41">
-                <br><br>
+                <input type="color" id="colorPicker" value="#ff0000">
                 <button class="action-btn" onclick="pushGlobalTheme()">REWRITE_THEME</button>
             </div>
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal-overlay" onclick="closePopupExternal(event)">
-        <div class="popup-box">
-            <div id="popupHeader">
-                <span>AUTHENTICATE</span>
-                <button class="close-btn" onclick="toggleModal('loginModal')">✕</button>
-            </div>
-            <input type="text" id="user" placeholder="Username">
-            <input type="password" id="pass" placeholder="Password">
-            <div class="checkbox-row">
-                <input type="checkbox" id="rememberMe"> <label>REMEMBER_ME</label>
-            </div>
-            <button class="action-btn" onclick="login()" style="width:100%">LOGIN</button>
-        </div>
-    </div>
-
-    <!-- Players Radar -->
-    <div id="playersModal" class="modal-overlay" onclick="closePopupExternal(event)">
-        <div class="popup-box">
-            <div id="popupHeader">
-                <span>LIVE_RADAR</span>
-                <button class="close-btn" onclick="toggleModal('playersModal')">✕</button>
-            </div>
-            <div id="playerList">Scanning Network...</div>
-        </div>
-    </div>
-
-    <script type="module" src="assets/js/script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
