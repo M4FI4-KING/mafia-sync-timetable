@@ -4,43 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAFIA_SYNC_V1</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-default">
-    <div class="scanline"></div>
-    <div class="container">
-        <div id="topHeader" class="header">
-            <button class="cyber-btn" onclick="toggleModal('playersModal')">PLAYERS_RADAR</button>
-            <button id="loginBtn" class="cyber-btn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
-        </div>
+<body>
+    <div class="header">
+        <button class="cyber-btn" onclick="toggleModal('playersModal')">PLAYERS</button>
+        <div class="user-display" id="loginBtn">MAFIAKING</div>
+        <button class="cyber-btn" id="adminBtn" onclick="toggleModal('adminPanel')" style="color: gold; border-color: gold;">CORE_CONTROL</button>
+    </div>
 
-        <h1 class="glitch">TIME_TABLE_V1</h1>
-        
-        <div id="timer-section">
-            <h2 id="clock">00:00:00</h2>
-            <h3 id="timerDisplay">SESSION: 00:00:00</h3>
-        </div>
+    <h1 class="glitch">T I M E _ T A B L E _ V 1</h1>
+    
+    <!-- Subject Grid Section -->
+    <div id="grid"></div>
 
+    <!-- Bottom Timer Section -->
+    <div class="timer-box">
+        <h2 id="clock">00:00:00</h2>
+        <h3 id="timerDisplay">SESSION: 00:00:00</h3>
         <div class="controls">
-            <!-- These now point to global functions -->
-            <button id="startBtn" class="action-btn" onclick="startStudy()">START_LEARNING</button>
-            <button id="stopBtn" class="action-btn" onclick="stopStudy()">STOP_LEARNING</button>
-        </div>
-
-        <div id="grid"></div>
-    </div>
-
-    <!-- LOGIN MODAL -->
-    <div id="loginModal" class="modal-overlay">
-        <div class="popup-box">
-            <div id="popupHeader"><span>AUTHENTICATE</span></div>
-            <input type="text" id="user" placeholder="Username">
-            <input type="password" id="pass" placeholder="Password">
-            <button class="action-btn" onclick="login()" style="width:100%">LOGIN</button>
-            <button class="cyber-btn" onclick="toggleModal('loginModal')" style="width:100%; margin-top:10px;">BACK</button>
+            <button id="startBtn" class="action-btn start" onclick="startStudy()">START_LEARNING</button>
+            <button id="stopBtn" class="action-btn stop" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
     </div>
 
-    <script type="module" src="assets/js/script.js"></script>
+    <div class="network-stats">
+        <div>↑ 0.5 KBps</div>
+        <div>↓ 0.7 KBps</div>
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
