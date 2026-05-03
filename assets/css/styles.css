@@ -1,6 +1,4 @@
-/* Core Themes */
 :root { --neon: #ff0000; --bg: #000; --glow: rgba(255, 0, 0, 0.6); }
-.theme-blue { --neon: #00d2ff; --bg: #000510; --glow: rgba(0, 210, 255, 0.6); }
 
 body {
     background: var(--bg);
@@ -13,23 +11,23 @@ body {
     overflow-x: hidden;
 }
 
-/* THE GRID FIX: Side-by-side cards */
+/* HORIZONTAL GRID */
 #grid {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
     width: 95%;
-    max-width: 1200px;
     margin-top: 30px;
 }
 
 .card {
     border: 1px solid var(--neon);
     padding: 20px;
-    width: 140px;
+    width: 130px;
     text-align: center;
-    background: rgba(255, 0, 0, 0.05);
+    background: rgba(20, 0, 0, 0.4);
     cursor: pointer;
     transition: 0.3s;
 }
@@ -40,7 +38,6 @@ body {
     box-shadow: 0 0 15px var(--neon);
 }
 
-/* Modal Overlay */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -56,10 +53,22 @@ body {
     border: 2px solid var(--neon);
     padding: 25px;
     width: 320px;
+    box-shadow: 0 0 30px var(--glow);
 }
 
-/* Aesthetic Glitch & Buttons */
-.glitch { font-size: 3rem; text-align: center; text-transform: uppercase; }
+.glitch {
+    font-size: 3rem;
+    animation: glitch 1s infinite;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
+    50% { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; }
+    100% { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; }
+}
+
 .action-btn { background: var(--neon); color: #000; border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; }
-.cyber-btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 5px 15px; cursor: pointer; margin: 5px; }
+.cyber-btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 5px 15px; cursor: pointer; }
 input { width: 100%; background: #111; border: 1px solid var(--neon); color: var(--neon); padding: 10px; margin: 10px 0; }
