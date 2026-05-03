@@ -34,16 +34,19 @@
         <div id="popupWindow" class="popup-box">
             <div id="popupHeader">
                 <span id="popupTitle">SYSTEM_INFO</span>
-                <button class="close-x" onclick="toggleModal('mainPopup')">X</button>
+                <button class="close-btn" onclick="toggleModal('mainPopup')">✕</button>
             </div>
             <div id="popupContent"></div>
         </div>
     </div>
 
     <!-- Admin Level 999 Menu -->
-    <div id="adminModal" class="modal-overlay">
+    <div id="adminModal" class="modal-overlay" onclick="closePopupExternal(event)">
         <div class="popup-box admin-box">
-            <h2 class="glitch" style="font-size: 1.5rem;">LEVEL_999_CORE</h2>
+            <div id="popupHeader">
+                <span class="glitch" style="font-size: 1.2rem;">LEVEL_999_CORE</span>
+                <button class="close-btn" onclick="toggleModal('adminModal')">✕</button>
+            </div>
             <div class="admin-controls">
                 <label>TARGET_PLAYER:</label>
                 <select id="targetPlayer">
@@ -56,23 +59,33 @@
                 <br><br>
                 <button class="action-btn" onclick="pushGlobalTheme()">REWRITE_THEME</button>
             </div>
-            <button class="cyber-btn" onclick="toggleModal('adminModal')">EXIT_CORE</button>
         </div>
     </div>
 
     <!-- Login Modal -->
-    <div id="loginModal" class="modal-overlay">
+    <div id="loginModal" class="modal-overlay" onclick="closePopupExternal(event)">
         <div class="popup-box">
-            <h2>AUTHENTICATE</h2>
+            <div id="popupHeader">
+                <span>AUTHENTICATE</span>
+                <button class="close-btn" onclick="toggleModal('loginModal')">✕</button>
+            </div>
             <input type="text" id="user" placeholder="Username">
             <input type="password" id="pass" placeholder="Password">
             <div class="checkbox-row">
                 <input type="checkbox" id="rememberMe"> <label>REMEMBER_ME</label>
             </div>
-            <div class="modal-btns">
-                <button class="action-btn" onclick="login()">LOGIN</button>
-                <button class="cyber-btn" onclick="toggleModal('loginModal')">CLOSE</button>
+            <button class="action-btn" onclick="login()" style="width:100%">LOGIN</button>
+        </div>
+    </div>
+
+    <!-- Players Radar -->
+    <div id="playersModal" class="modal-overlay" onclick="closePopupExternal(event)">
+        <div class="popup-box">
+            <div id="popupHeader">
+                <span>LIVE_RADAR</span>
+                <button class="close-btn" onclick="toggleModal('playersModal')">✕</button>
             </div>
+            <div id="playerList">Scanning Network...</div>
         </div>
     </div>
 
