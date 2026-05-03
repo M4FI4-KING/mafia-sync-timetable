@@ -1,59 +1,20 @@
-:root { --neon: #ff0000; --bg: #000; }
+const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+const grid = document.getElementById('grid');
 
-body {
-    background: var(--bg);
-    color: var(--neon);
-    font-family: 'Courier New', monospace;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-}
+// Build the grid cards
+days.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<strong>${d}</strong>`;
+    card.onclick = () => alert("Selected: " + d);
+    grid.appendChild(card);
+});
 
-/* FORCES CARDS TO BE SIDE-BY-SIDE */
-#grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    width: 90%;
-    margin-top: 20px;
-}
+// Simple Clock
+setInterval(() => {
+    document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+}, 1000);
 
-.card {
-    border: 1px solid var(--neon);
-    padding: 15px;
-    width: 120px;
-    text-align: center;
-    cursor: pointer;
-    background: rgba(255, 0, 0, 0.05);
-}
-
-.card:hover {
-    background: var(--neon);
-    color: #000;
-}
-
-.glitch {
-    font-size: 3rem;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-.action-btn {
-    background: var(--neon);
-    color: #000;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    margin: 5px;
-    cursor: pointer;
-}
-
-.cyber-btn {
-    background: transparent;
-    border: 1px solid var(--neon);
-    color: var(--neon);
-    padding: 5px 10px;
-    margin: 5px;
-}
+// Basic Button Logic
+window.startStudy = () => { console.log("Started"); };
+window.stopStudy = () => { console.log("Stopped"); };
