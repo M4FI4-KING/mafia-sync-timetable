@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAFIA_SYNC_V1</title>
+    <title>MAFIA_SYNC_RELOADED</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-default">
     <div class="scanline"></div>
     <div class="container">
         <div id="topHeader" class="header">
-            <button class="cyber-btn">PLAYERS_RADAR</button>
-            <button id="loginBtn" class="cyber-btn">SYSTEM_LOGIN</button>
+            <button class="cyber-btn" onclick="toggleModal('playersModal')">PLAYERS_RADAR</button>
+            <button id="loginBtn" class="cyber-btn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
         </div>
 
-        <h1 class="glitch">TIME_TABLE_V1</h1>
+        <h1 class="glitch" data-text="TIME_TABLE_V1">TIME_TABLE_V1</h1>
         
         <div id="timer-section">
             <h2 id="clock">00:00:00</h2>
@@ -22,12 +22,22 @@
         </div>
 
         <div class="controls">
-            <button id="startBtn" class="action-btn">START_LEARNING</button>
-            <button id="stopBtn" class="action-btn">STOP_LEARNING</button>
+            <button id="startBtn" class="action-btn" onclick="startStudy()">START_LEARNING</button>
+            <button id="stopBtn" class="action-btn" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
 
-        <!-- This is where your cards will appear side-by-side -->
+        <!-- This is the container for your MON, TUE, WED cards -->
         <div id="grid"></div>
+    </div>
+
+    <!-- Simple Login Modal -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="popup-box">
+            <div id="popupHeader"><span>AUTHENTICATE</span></div>
+            <input type="text" id="user" placeholder="Username">
+            <input type="password" id="pass" placeholder="Password">
+            <button class="action-btn" onclick="login()" style="width:100%">LOGIN</button>
+        </div>
     </div>
 
     <script type="module" src="script.js"></script>
