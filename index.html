@@ -7,56 +7,72 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="theme-default">
-    <div class="container">
+    <div class="scanline"></div>
+    <div class="container fade-in">
         <div id="topHeader" class="header">
-            <button onclick="toggleModal('playersModal')">PLAYERS</button>
-            <button id="loginBtn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
+            <button class="cyber-btn" onclick="toggleModal('playersModal')">PLAYERS_RADAR</button>
+            <button id="loginBtn" class="cyber-btn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
         </div>
 
-        <h1>TIME_TABLE_V1</h1>
+        <h1 class="glitch" data-text="TIME_TABLE_V1">TIME_TABLE_V1</h1>
         
         <div id="timer-section">
-            <h2 id="clock">00:00:00</h2>
+            <h2 id="clock" class="neon-glow">00:00:00</h2>
             <h3 id="timerDisplay">SESSION: 00:00:00</h3>
         </div>
 
         <div class="controls">
-            <button id="startBtn" class="btn-glow" onclick="startStudy()">START_LEARNING</button>
-            <button id="stopBtn" onclick="stopStudy()">STOP_LEARNING</button>
+            <button id="startBtn" class="action-btn" onclick="startStudy()">START_LEARNING</button>
+            <button id="stopBtn" class="action-btn" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
 
         <div id="grid"></div>
     </div>
 
+    <!-- The Resizing Dynamic Pop-up (Unified Window) -->
+    <div id="mainPopup" class="modal-overlay" onclick="closePopupExternal(event)">
+        <div id="popupWindow" class="popup-box">
+            <div id="popupHeader">
+                <span id="popupTitle">SYSTEM_INFO</span>
+                <button class="close-x" onclick="toggleModal('mainPopup')">X</button>
+            </div>
+            <div id="popupContent"></div>
+        </div>
+    </div>
+
+    <!-- Admin Level 999 Menu -->
+    <div id="adminModal" class="modal-overlay">
+        <div class="popup-box admin-box">
+            <h2 class="glitch" style="font-size: 1.5rem;">LEVEL_999_CORE</h2>
+            <div class="admin-controls">
+                <label>TARGET_PLAYER:</label>
+                <select id="targetPlayer">
+                    <option value="MAFIADEVIL">MAFIADEVIL</option>
+                    <option value="MAFIAKING">MAFIAKING</option>
+                </select>
+                <br><br>
+                <label>NETWORK_OVERRIDE_COLOR:</label>
+                <input type="color" id="colorPicker" value="#00ff41">
+                <br><br>
+                <button class="action-btn" onclick="pushGlobalTheme()">REWRITE_THEME</button>
+            </div>
+            <button class="cyber-btn" onclick="toggleModal('adminModal')">EXIT_CORE</button>
+        </div>
+    </div>
+
     <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
+    <div id="loginModal" class="modal-overlay">
+        <div class="popup-box">
             <h2>AUTHENTICATE</h2>
             <input type="text" id="user" placeholder="Username">
             <input type="password" id="pass" placeholder="Password">
-            <label><input type="checkbox" id="rememberMe"> REMEMBER_ME</label>
-            <div class="modal-btns">
-                <button onclick="login()">LOGIN</button>
-                <button onclick="toggleModal('loginModal')">CLOSE</button>
+            <div class="checkbox-row">
+                <input type="checkbox" id="rememberMe"> <label>REMEMBER_ME</label>
             </div>
-        </div>
-    </div>
-
-    <!-- Pop-up Window (Subject/Calendar Details) -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content detail-box">
-            <h2 id="detailTitle">SUBJECT_INFO</h2>
-            <div id="detailBody"></div>
-            <button onclick="toggleModal('detailsModal')">CLOSE</button>
-        </div>
-    </div>
-
-    <!-- Players Radar -->
-    <div id="playersModal" class="modal">
-        <div class="modal-content">
-            <h2>LIVE_RADAR</h2>
-            <div id="playerList">Scanning...</div>
-            <button onclick="toggleModal('playersModal')">BACK</button>
+            <div class="modal-btns">
+                <button class="action-btn" onclick="login()">LOGIN</button>
+                <button class="cyber-btn" onclick="toggleModal('loginModal')">CLOSE</button>
+            </div>
         </div>
     </div>
 
