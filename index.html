@@ -3,56 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAFIA SYNC | TIMETABLE V1</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>MAFIA_SYNC_V1</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body id="mainBody">
-
-    <header id="topHeader">
-        <button class="btn" onclick="toggleModal('playerModal')">Players</button>
-        <button class="btn" id="loginBtn" onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
-    </header>
-
+<body class="hacker-theme">
     <div class="container">
-        <h1 class="glitch-title">TIME_TABLE_V1</h1>
-        <div class="grid" id="grid"></div>
-    </div>
+        <div class="header">
+            <button onclick="toggleModal('playersModal')">PLAYERS</button>
+            <button onclick="toggleModal('loginModal')">SYSTEM_LOGIN</button>
+        </div>
 
-    <div class="hud">
-        <div id="clock">00:00:00</div>
-        <div id="timerDisplay">SESSION: 00:00:00</div>
-        <div style="margin-top: 10px;">
-            <button class="btn btn-start" onclick="startStudy()">START_LEARNING</button>
-            <button class="btn btn-stop" onclick="stopStudy()">STOP_LEARNING</button>
+        <h1>TIME_TABLE_V1</h1>
+        
+        <div id="timer-section">
+            <h2 id="clock">00:00:00</h2>
+            <p>SESSION: <span id="session-time">00:00:00</span></p>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn" class="btn-glow">START_LEARNING</button>
+            <button id="stopBtn">STOP_LEARNING</button>
+        </div>
+
+        <div id="admin-panel" style="display:none; margin-top: 20px;">
+            <button class="btn-admin" onclick="alert('LVL 999: CORE_ACCESS_OPEN')">CORE_CONTROL</button>
         </div>
     </div>
 
     <!-- Login Modal -->
-    <div class="modal" id="loginModal">
+    <div id="loginModal" class="modal">
         <div class="modal-content">
-            <h2 style="color: var(--neon)">AUTHENTICATE</h2>
+            <h2>AUTHENTICATE</h2>
             <input type="text" id="user" placeholder="Username">
             <input type="password" id="pass" placeholder="Password">
-            <br>
-            <button class="btn" onclick="login()">LOGIN</button>
-            <button class="btn" onclick="toggleModal('loginModal')" style="border:none">CLOSE</button>
+            <div class="modal-btns">
+                <button id="loginSubmit">LOGIN</button>
+                <button onclick="toggleModal('loginModal')">CLOSE</button>
+            </div>
         </div>
     </div>
 
-    <!-- Day Info Modal -->
-    <div class="modal" id="dayModal">
+    <!-- Players Radar Modal -->
+    <div id="playersModal" class="modal">
         <div class="modal-content">
-            <h2 id="dayTitle" style="color: var(--neon)">DAY_INFO</h2>
-            <div id="dayInfo"></div>
-            <br>
-            <button class="btn" onclick="toggleModal('dayModal')">BACK</button>
+            <h2>LIVE_RADAR</h2>
+            <div id="playerList">
+                <p>Scanning network...</p>
+            </div>
+            <button onclick="toggleModal('playersModal')">BACK</button>
         </div>
     </div>
 
-  <!-- Load Firebase as a Module -->
-<script type="module" src="assets/js/script.js"></script>
+    <script type="module" src="script.js"></script>
+    <script>
+        // Simple UI toggle that doesn't need Firebase
+        function toggleModal(id) {
+            const m = document.getElementById(id);
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        }
+        window.toggleModal = toggleModal;
+    </script>
 </body>
 </html>
-
-
-
