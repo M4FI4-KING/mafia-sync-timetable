@@ -1,4 +1,4 @@
-/* --- GLOBAL THEME --- */
+* { box-sizing: border-box; }
 body {
     background: #000;
     color: #00ff41;
@@ -8,86 +8,67 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
 }
 
-/* --- HEADER & NAVIGATION --- */
-.header {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
+/* --- HEADER & BUTTONS --- */
+.header { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+button {
+    background: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    padding: 10px 20px;
+    cursor: pointer;
+    text-transform: uppercase;
 }
+button:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px #00ff41; }
 
-h1 {
-    letter-spacing: 5px;
-    text-shadow: 0 0 10px #00ff41;
-}
-
-/* --- CLOCK & TIMER --- */
+/* --- CLOCK --- */
 #clock {
     font-size: 3.5rem;
-    color: #00ff41;
-    text-shadow: 0 0 20px #00ff41, 0 0 30px #00ff41; /* Sharper Neon Glow */
-    margin: 10px 0;
+    text-shadow: 0 0 20px #00ff41;
+    margin: 20px 0;
 }
 
-#timerDisplay {
-    font-size: 1.2rem;
-    color: #888;
-    margin-bottom: 20px;
-}
-
-/* --- THE GRID FIX (Crucial for image_4ef63b.png) --- */
+/* --- THE GRID FIX --- */
 #grid {
-    display: grid;
-    /* This creates multiple columns automatically based on screen width */
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-    margin-top: 30px;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    max-width: 1300px !important;
+    margin-top: 40px;
 }
 
 .card {
-    background: rgba(0, 255, 65, 0.02);
+    background: rgba(0, 255, 65, 0.05);
     border: 1px solid #00ff41;
-    padding: 20px;
-    border-radius: 4px;
+    padding: 25px;
     text-align: center;
-    transition: 0.3s ease;
-}
-
-.card:hover {
-    background: rgba(0, 255, 65, 0.1);
-    box-shadow: 0 0 15px #00ff41;
+    border-radius: 4px;
 }
 
 .day-name {
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #222;
     display: block;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #00ff41;
+    padding-bottom: 5px;
 }
 
-/* --- BUTTONS --- */
-button {
-    background: #000;
-    color: #fff;
-    border: 1px solid #fff;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-family: inherit;
-    text-transform: uppercase;
+/* --- MODALS --- */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
 }
-
-button:hover {
-    background: #fff;
-    color: #000;
-}
-
-#adminBtn {
-    border-color: gold;
-    color: gold;
+.modal-content {
+    background: #111;
+    padding: 30px;
+    border: 2px solid #00ff41;
 }
