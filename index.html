@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAFIA_SYNC_V1</title>
-    <link rel="stylesheet" href=assets/css/styles.css>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="theme-red">
+<body class="theme-default">
     <div class="container">
         <div id="topHeader" class="header">
             <button onclick="toggleModal('playersModal')">PLAYERS</button>
@@ -25,18 +25,16 @@
             <button id="stopBtn" onclick="stopStudy()">STOP_LEARNING</button>
         </div>
 
-        <!-- The main grid container -->
-        <div id="grid">
-            <!-- JavaScript will inject cards here -->
-        </div>
+        <div id="grid"></div>
     </div>
 
-    <!-- Modals -->
+    <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <h2>AUTHENTICATE</h2>
             <input type="text" id="user" placeholder="Username">
             <input type="password" id="pass" placeholder="Password">
+            <label><input type="checkbox" id="rememberMe"> REMEMBER_ME</label>
             <div class="modal-btns">
                 <button onclick="login()">LOGIN</button>
                 <button onclick="toggleModal('loginModal')">CLOSE</button>
@@ -44,12 +42,20 @@
         </div>
     </div>
 
+    <!-- Pop-up Window (Subject/Calendar Details) -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content detail-box">
+            <h2 id="detailTitle">SUBJECT_INFO</h2>
+            <div id="detailBody"></div>
+            <button onclick="toggleModal('detailsModal')">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Players Radar -->
     <div id="playersModal" class="modal">
         <div class="modal-content">
             <h2>LIVE_RADAR</h2>
-            <div id="playerList">
-                <p>Scanning network...</p>
-            </div>
+            <div id="playerList">Scanning...</div>
             <button onclick="toggleModal('playersModal')">BACK</button>
         </div>
     </div>
