@@ -24,24 +24,12 @@ const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 let studySeconds = 0;
 let timerInterval;
 
-// --- LOGIN & AUTH ---
-window.login = async () => {
-    const userVal = document.getElementById('user').value.trim();
-    const pass = document.getElementById('pass').value.trim();
-    const email = userVal.includes('@') ? userVal : `${userVal.toLowerCase()}@mafia.com`;
-
-    try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        window.toggleModal('loginModal');
-    } catch (e) { alert("ACCESS DENIED: " + e.message); }
-};
-
+// --- AUTH & RADAR SYNC ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const username = user.email.split('@')[0].toUpperCase();
         document.getElementById('loginBtn').innerText = username;
 
-        // Presence Logic
         const statusRef = ref(rtdb, 'status/' + username);
         set(statusRef, { state: 'online', last_changed: Date.now() });
         onDisconnect(statusRef).remove();
@@ -51,7 +39,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// --- LIVE RADAR ---
 function setupLiveRadar() {
     const statusRef = ref(rtdb, 'status');
     onValue(statusRef, (snapshot) => {
@@ -61,17 +48,16 @@ function setupLiveRadar() {
         list.innerHTML = "";
         Object.keys(data).forEach(u => {
             const color = data[u].state === 'STUDYING' ? '#ff3131' : '#00ff41';
-            list.innerHTML += `<div style="color:${color}; border-bottom:1px solid #222; padding:5px;">● ${u} [${data[u].state}]</div>`;
+            list.innerHTML += `<div style="color:${color}; padding:10px; border-bottom:1px solid #222;">● ${u} [${data[u].state}]</div>`;
         });
     });
 }
 
-// --- STUDY TRACKER ---
+// --- TRACKER LOGIC ---
 window.startStudy = () => {
     if (!auth.currentUser) return alert("LOGIN REQUIRED");
     const u = auth.currentUser.email.split('@')[0].toUpperCase();
     set(ref(rtdb, 'status/' + u), { state: 'STUDYING', last_changed: Date.now() });
-    
     timerInterval = setInterval(() => { studySeconds++; updateDisplay(); }, 1000);
 };
 
@@ -80,10 +66,9 @@ window.stopStudy = async () => {
     if (!auth.currentUser) return;
     const u = auth.currentUser.email.split('@')[0].toUpperCase();
     set(ref(rtdb, 'status/' + u), { state: 'online', last_changed: Date.now() });
-    
     await setDoc(doc(db, "study_logs", u), { totalSeconds: studySeconds, date: new Date().toLocaleDateString() }, { merge: true });
-    alert("SESSION_SYNCED");
-    studySeconds = 0; updateDisplay();
+    studySeconds = 0;
+    updateDisplay();
 };
 
 function updateDisplay() {
@@ -93,7 +78,17 @@ function updateDisplay() {
     document.getElementById('timerDisplay').innerText = `SESSION: ${h}:${m}:${s}`;
 }
 
-// --- UTILS ---
+// --- UTILITIES ---
+window.login = async () => {
+    const uVal = document.getElementById('user').value.trim();
+    const pass = document.getElementById('pass').value.trim();
+    const email = uVal.includes('@') ? uVal : `${uVal.toLowerCase()}@mafia.com`;
+    try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        window.toggleModal('loginModal');
+    } catch (e) { alert("ERROR: " + e.message); }
+};
+
 window.toggleModal = (id) => {
     const m = document.getElementById(id);
     m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
@@ -103,16 +98,16 @@ function unlockAdmin() {
     if (document.getElementById('adminBtn')) return;
     const btn = document.createElement('button');
     btn.id = 'adminBtn'; btn.innerText = "CORE_CONTROL"; btn.style.color = "gold";
-    btn.onclick = () => alert("LVL 999 ACCESS GRANTED");
+    btn.onclick = () => alert("LVL 999: GitHub Source Access Granted.");
     document.getElementById('topHeader').appendChild(btn);
 }
 
-// UI Generation
+// Grid Generation
 const grid = document.getElementById('grid');
 days.forEach((day, i) => {
     const card = document.createElement('div');
     card.className = 'card';
-    card.innerHTML = `<div class="day">${day}</div><p>${subjects[i % 9]}</p>`;
+    card.innerHTML = `<span class="day-name">${day}</span><p>${subjects[i % 9]}</p>`;
     grid.appendChild(card);
 });
 
